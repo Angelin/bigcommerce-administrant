@@ -1,0 +1,36 @@
+{
+    "success": true,
+    "total": 6,
+    "rows": [
+        {
+            "name": "Product 1",
+            "price": "100",
+            "size": "small",
+            "availDate": "03/09/2016"
+        },
+        {
+            "name": "Product 2",
+            "price": "200",
+            "size": "small",
+            "availDate": "03/09/2016"
+        },
+        {
+            "name": "Product 3",
+            "price": "300",
+            "size": "large",
+            "availDate": "03/09/2016"
+        },
+        {
+            "name": "Product 4",
+            "price": "400",
+            "size": "Small",
+            "availDate": "03/09/2016"
+        },
+        {
+            "name": "Product 5",
+            "price": "500",
+            "size": "small",
+            "availDate": "03/09/2016"
+        }
+    ]
+}
