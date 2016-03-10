@@ -1,0 +1,71 @@
+"Imagine," which John Lennon wrote several years later. Both songs give us hope of a happier and more peaceful world. 
+
+ inbound marketing strategy
+ create a content strategy to help with lead and demand generation
+ Develop conversion opportunities before the checkout to grow your reach.
+ Identify key technologies to help you grow and scale. 
+ 
+https://login.bigcommerce.com/login
+ Preview code: 28w3d5tcbc
+ nadarangel@gmail.com ang@commerce9
+ 
+ http://phpfiddle.org/
+ email: ang@fiddle
+ 
+ http://stacks3.mybigcommerce.com/?showStore=yes
+ 
+ 
+  Ajax requests to perform CRUD actions
+  
+  
+ 
+ grid
+	search
+	menu : produt/order/customer
+	inline editing
+	bulk- allping discount
+	upload in github
+	
+record video of desktop
+quick tip in site
+
+
+out of stock, free shipping, visible, not visible, featured	
+batch update - give discount to product: create a discount column - update column
+intelligent search-   coumn name: value
+mulitpl selections
+
+
+
+
+
+
+
+var productsColumnModel = new Ext.ProductsColumnModel({
+		columns: [editorGridSelectionModel,
+		
+		
+		var editorGridSelectionModel = new Ext.grid.CheckboxSelectionModel({
+		checkOnly: true,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+ 
+	
