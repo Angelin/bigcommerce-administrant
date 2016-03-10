@@ -4,33 +4,38 @@
     "rows": [
         {
             "name": "Product 1",
+            "description": " Description1",
             "price": "100",
             "size": "small",
-            "availDate": "03/09/2016"
+            "availDate": "09/03/2016"
         },
         {
             "name": "Product 2",
+            "description": " Description2",
             "price": "200",
             "size": "small",
-            "availDate": "03/09/2016"
+            "availDate": "09/03/2016"
         },
         {
             "name": "Product 3",
+            "description": " Description3",
             "price": "300",
             "size": "large",
-            "availDate": "03/09/2016"
+            "availDate": "09/03/2016"
         },
         {
             "name": "Product 4",
+            "description": " Description4",
             "price": "400",
-            "size": "Small",
-            "availDate": "03/09/2016"
+            "size": "small",
+            "availDate": "09/03/2016"
         },
         {
             "name": "Product 5",
+            "description": " Description5",
             "price": "500",
             "size": "small",
-            "availDate": "03/09/2016"
+            "availDate": "09/03/2016"
         }
     ]
 }
