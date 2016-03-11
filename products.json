@@ -1,41 +1,57 @@
 {
     "success": true,
-    "total": 6,
+    "total": 5,
     "rows": [
         {
             "name": "Product 1",
-            "description": " Description1",
+            "description": " Description 1",
             "price": "100",
             "size": "small",
-            "availDate": "09/03/2016"
+            "isVisible": true,
+            "freeshipping": true,
+            "featured": false,
+            "quantity": "100"
         },
         {
             "name": "Product 2",
-            "description": " Description2",
+            "description": " Description 2",
             "price": "200",
             "size": "small",
-            "availDate": "09/03/2016"
+            "isVisible": false,
+            "freeshipping": false,
+            "featured": false, 
+            "quantity": "0"
+            
         },
         {
             "name": "Product 3",
-            "description": " Description3",
+            "description": " Description 3",
             "price": "300",
             "size": "large",
-            "availDate": "09/03/2016"
+            "isVisible": true,
+            "freeshipping": false,
+            "featured": true,
+             "quantity": "20"
         },
         {
             "name": "Product 4",
-            "description": " Description4",
+            "description": " Description 4",
             "price": "400",
             "size": "small",
-            "availDate": "09/03/2016"
+            "isVisible": true,
+            "freeshipping": true,
+            "featured": true,
+             "quantity": "0"
         },
         {
             "name": "Product 5",
-            "description": " Description5",
+            "description": " Description 5",
             "price": "500",
             "size": "small",
-            "availDate": "09/03/2016"
+            "isVisible": false,
+            "freeshipping": true,
+            "featured": false,
+             "quantity": "50"
         }
     ]
 }

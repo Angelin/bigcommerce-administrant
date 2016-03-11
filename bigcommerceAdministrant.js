@@ -1,3 +1,9 @@
+/*
+Author      : Angelin L. Nadar nadarangel@gmail.com
+Description : This is the core file of the product.
+Disclaimer  : This product has known bugs/optimizations. This prouct is a built as a prototype and solely to establish the idea of the product.
+*/
+
 Ext.Loader.setConfig({
     enabled: true
 });
@@ -8,9 +14,7 @@ Ext.require([
     'Ext.data.*',
     'Ext.util.*',
     'Ext.state.*',
-    'Ext.form.*',
-//    'Ext.grid.ColumnModel',
-//    'Ext.ux.CheckColumn'
+    'Ext.form.*'
 ]);
 if (window.location.search.indexOf('scopecss') !== -1) {
 // We are using ext-all-scoped.css, so all rendered ExtJS Components must have a
@@ -21,20 +25,21 @@ if (window.location.search.indexOf('scopecss') !== -1) {
 
 
 Ext.onReady(function () {
+    var iconUrl = 'resources/icons/';
     Ext.QuickTips.init();
-    function formatDate(value) {
-        return value ? Ext.Date.dateFormat(value, 'M d, Y') : '';
-    }
 
 //BOF Models
     Ext.define('Product', {
         extend: 'Ext.data.Model',
         fields: [
             {name: 'name', type: 'string'},
+            {name: 'description', type: 'string'},
             {name: 'size'},
             {name: 'price', type: 'float'},
-            {name: 'availDate', type: 'date', dateFormat: 'd/m/Y'}
-//            {name: 'availDate', type: 'string'}
+            {name: 'quantity', type: 'int'},
+            {name: 'isVisible', type: 'Boolean'},
+            {name: 'freeshipping', type: 'Boolean'},
+            {name: 'featured', type: 'Boolean'}
         ]
     });
     Ext.define('Order', {
@@ -47,13 +52,31 @@ Ext.onReady(function () {
             {name: 'status', type: 'string'}
         ]
     });
+
+    var operatorStore = Ext.create('Ext.data.Store', {
+        fields: ['name', 'value'],
+        data: [
+            {name: 'Greater than or Equal to', value: '>='},
+            {name: 'Lesser than or Equal to', value: '<='},
+            {name: 'Equal to', value: '=='},
+            {name: 'Not Equal to', value: 'Not Equal To!='}
+        ]
+    });
+
+    var searchColumnStore = Ext.create('Ext.data.Store', {
+        fields: ['name', 'value'],
+        data: [
+            {name: 'Name', value: 'name'},
+            {name: 'Price', value: 'price'},
+            {name: 'Size', value: 'size'},
+        ]
+    });
 //EOF Models
 
-
-    // create the Data Store
     var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
         clicksToEdit: 1
     });
+
 //    checkboxes for rows
     var BI = {};
     BI.pagesize = 2;
@@ -97,25 +120,21 @@ Ext.onReady(function () {
                     });
                     return;
                 }
-                console.log('BI.currentStore:', BI.currentStore);
                 BI.currentStore.filter([
                     {filterFn: function (item) {
-                            var result = false;
                             var pattern = new RegExp(searchText, "i");
-                            for (i in BI.currentColumns) {
-                                result = (result || (pattern.test(item.get(BI.currentColumns[i]))));
+                            var result = false;
+                            for (var i in BI.currentColumns) {
+                                result = (result || (pattern.test(item.get(BI.currentColumns[i].dataIndex))));
+                                if (result == true)
+                                    return result;
                             }
-
                             return result;
                         }}
                 ]);
-//                BI.currentStore.filter([
-//                    {filterFn: function (item) {
-//                            return item.get("name") == 'Product 1';
-//                        }}
-//                ]);
             }}
     });
+
     BI.mainMenuStore = Ext.create('Ext.data.Store', {
         data: [
             {"name": "Products", "value": "products"},
@@ -128,17 +147,14 @@ Ext.onReady(function () {
         ]
     });
     BI.showSelectedMenuView = function () {
-//        pagingToolbar.bind(BI.currentStore);
+        var pagingToolbar = administrant.getDockedItems('pagingtoolbar')[0];
+        pagingToolbar.bind(BI.currentStore);
         administrant.reconfigure(BI.currentStore, BI.currentColumns);
-        BI.currentStore.load({
-            params: {
-                // specify params for the first page load if using paging
-                start: 0,
-                limit: BI.pagesize
-            }
-        });
-//        fieldsStore.loadData(productsFields);
-    };
+       
+//        administrant.getStore.sort("id", "ASC");
+        administrant.doComponentLayout();
+        administrant.doLayout();
+     };
     // BOF config for Product 
     BI.products = {
         store: Ext.create('Ext.data.Store', {
@@ -150,7 +166,7 @@ Ext.onReady(function () {
                 type: 'ajax',
                 // load remote data using HTTP
                 url: 'products.json',
-                // specify a XmlReader (coincides with the XML format of the returned data)
+                // specify a jsonReader (coincides with the json format of the returned data)
                 reader: {
                     type: 'json',
                     root: 'rows'
@@ -180,7 +196,6 @@ Ext.onReady(function () {
             }, {
                 header: 'Size',
                 dataIndex: 'size',
-                width: 130,
                 editor: new Ext.form.field.ComboBox({
                     typeAhead: true,
                     triggerAction: 'all',
@@ -195,7 +210,6 @@ Ext.onReady(function () {
             }, {
                 header: 'Price',
                 dataIndex: 'price',
-                width: 70,
                 align: 'right',
                 renderer: 'usMoney',
                 editor: {
@@ -206,18 +220,43 @@ Ext.onReady(function () {
                 }
             },
             {
-                header: 'Available',
-                dataIndex: 'availDate',
-                flex: 0.25,
-                renderer: Ext.util.Format.dateRenderer('d/m/Y H:i:s')
+                header: 'Quantity',
+                dataIndex: 'quantity',
+                align:'right'
             },
-//            {
-//                xtype: 'checkcolumn',
-//                header: 'Visible?',
-//                dataIndex: 'isVisible',
-//                width: 55,
-//                stopSelection: false
-//            },
+            {
+                xtype: 'checkcolumn',
+                header: 'Visible?',
+                dataIndex: 'isVisible',
+                renderer: function (val, m, rec) {
+                    if (rec.get('isVisible') == false)
+                        return (new Ext.ux.CheckColumn()).renderer();
+                    else
+                        return (new Ext.ux.CheckColumn()).renderer(val);
+                }
+            },
+            {
+                xtype: 'checkcolumn',
+                header: 'Free Shipping',
+                dataIndex: 'freeshipping',
+                renderer: function (val, m, rec) {
+                    if (rec.get('freeShipping') == false)
+                        return (new Ext.ux.CheckColumn()).renderer();
+                    else
+                        return (new Ext.ux.CheckColumn()).renderer(val);
+                }
+            },
+            {
+                xtype: 'checkcolumn',
+                header: 'Is Featured?',
+                dataIndex: 'featured',
+                renderer: function (val, m, rec) {
+                    if (rec.get('isFeatured') == false)
+                        return (new Ext.ux.CheckColumn()).renderer();
+                    else
+                        return (new Ext.ux.CheckColumn()).renderer(val);
+                }
+            },
 //            {
 //           xtype: 'checkcolumn',
 //           text: 'Active?',
@@ -226,8 +265,8 @@ Ext.onReady(function () {
 //        },
             {
                 xtype: 'actioncolumn',
-                width: 60,
                 sortable: false,
+                width: 40,
                 items: [{
                         icon: 'resources/icons/delete.gif',
                         tooltip: 'Delete Plant',
@@ -311,7 +350,7 @@ Ext.onReady(function () {
                 width: 60,
                 sortable: false,
                 items: [{
-                        icon: 'resources/icons/delete.gif',
+                        icon: iconUrl + 'delete.gif',
                         tooltip: 'Delete Plant',
                         handler: function (grid, rowIndex, colIndex) {
                             grid.store.removeAt(rowIndex);
@@ -325,7 +364,6 @@ Ext.onReady(function () {
 
 // BOF Main Menu
     BI.mainMenu = new Ext.form.field.ComboBox({
-        fieldLabel: 'Choose a option',
         triggerAction: 'all',
         selectOnTab: true,
         store: BI.mainMenuStore,
@@ -336,11 +374,10 @@ Ext.onReady(function () {
         forceSelection: true,
         valueField: 'value',
         value: 'products',
-        listeners: {
+        listeners: { 
             select: function () {
                 //when am option is selected from the main menu
                 BI.activeModule = this.value;
-                console.debug(BI.activeModule);
                 if (BI.activeModule == 'orders') {
                     BI.currentStore = BI.orders.store;
                     BI.currentColumns = BI.orders.columns;
@@ -350,6 +387,16 @@ Ext.onReady(function () {
                 } else {
                     BI.currentStore = BI.customers.store;
                     BI.currentColumns = BI.customers.columns;
+                }
+                
+                if(BI.activeModule != 'products'){
+                     Ext.getCmp('isvisible').hide();
+                     Ext.getCmp('freeshipping').hide();
+                     Ext.getCmp('outofstock').hide();
+                }else{
+                     Ext.getCmp('isvisible').show();
+                     Ext.getCmp('freeshipping').show();
+                     Ext.getCmp('outofstock').show();
                 }
                 BI.showSelectedMenuView();
             }
@@ -362,11 +409,11 @@ Ext.onReady(function () {
     BI.currentStore = BI.products.store;
     var administrant = Ext.create('Ext.grid.Panel', {
         id: 'bigcommerce_administrant',
-//        store: BI.products.store,
         store: '',
         selModel: BI.selectionChechboxModel,
         columns: BI.products.columns,
         renderTo: 'editor-grid',
+        icon: iconUrl + 'administrant.gif',
         title: 'Bigcommerce Administrant',
         frame: true,
         emptyText: "No record found :(",
@@ -377,12 +424,11 @@ Ext.onReady(function () {
                 typeAhead: true,
                 triggerAction: 'all',
                 selectOnTab: true,
-                id: 'advance-search',
-                store: [
-                    ['Name', 'name'],
-                    ['Price', 'price'],
-                    ['Size', 'size']
-                ],
+                id: 'advance-search-column',
+                store: searchColumnStore,
+                emptyText: 'Choose Column',
+                displayField: 'name',
+                valueField: 'value',
                 lazyRender: true,
                 listClass: 'x-combo-list-small'
             },
@@ -392,33 +438,62 @@ Ext.onReady(function () {
                 triggerAction: 'all',
                 selectOnTab: true,
                 id: 'advance-search-operator',
-                store: [
-                    ['Greater than or Equal to', '>='],
-                    ['Lesser than or Equal to', '<='],
-                    ['Equal to', '=='],
-                    ['Not Equal to', '!=']
-                ],
+                store: operatorStore,
+                emptyText: 'Choose Operator',
+                displayField: 'name',
+                valueField: 'value',
                 lazyRender: true,
                 listClass: 'x-combo-list-small'
             },
             {
                 xtype: 'textfield',
-                id: 'advance-search'
+                id: 'advance-search',
+                emptyText: 'Enter value'
             },
             {
                 text: 'Search',
-                id: 'simple-search',
+                id: 'search',
                 handler: function () {
-                    BI.searchTextField.hide();
+                    var column = Ext.getCmp('advance-search-column').value, operator = Ext.getCmp('advance-search-operator').value, searchValue = Ext.getCmp('advance-search').value;
+                    BI.currentStore.clearFilter();
+                    BI.currentStore.filter([
+                        {filterFn: function (item) {
+                                var t = false;
+                                switch (operator) {
+                                    case '>=':
+                                        t = (item.get(column) >= searchValue);
+                                        break;
+                                    case '<=':
+                                        t = (item.get(column) <= searchValue);
+                                        break;
+                                    case '>':
+                                        t = (item.get(column) > searchValue);
+                                        break;
+                                    case '<':
+                                        t = (item.get(column) < searchValue);
+                                        break;
+                                    case '!=':
+                                        t = (item.get(column) != searchValue);
+                                        break;
+                                    case '==':
+                                        t = (item.get(column) == searchValue);
+                                        break;
+                                    default:
+                                        t = false;
+                                        break;
+                                }
+                                return t;
+                            }}
+                    ]);
+
                 }
             },
             {
                 xtype: 'checkbox',
+                hideLabel: true,
+                margin: '0 0 0 4px',
                 text: 'Advance Search',
                 handler: function () {
-//                    var searchToolbar = administrant;
-//                    console.debug('searchToolbar: ',searchToolbar);
-
                     if (this.text == 'Advance Search') {
                         BI.searchTextField.hide();
                         this.text = 'Simple Search';
@@ -432,6 +507,52 @@ Ext.onReady(function () {
                         Ext.getCmp('advance-search-operator').hide();
                         Ext.getCmp('advance-search').hide();
                     }
+                }}, 'Advance Search',
+            {
+                xtype: 'checkbox',
+                id:'isvisible',
+                text: 'Visible',
+                boxLabel: 'Visible',
+                dataIndex: 'isVisible',
+                handler: function () {
+                    var visibleChecked = this.checked;
+                    BI.currentStore.clearFilter();
+                    BI.currentStore.filter([
+                        {filterFn: function (item) {
+                                return ((visibleChecked == true) ? (item.get('isVisible') == true) : (item.get('isVisible') == false));
+                            }
+                        }]);
+                }},
+            {
+                xtype: 'checkbox',
+                id: 'freeshipping',
+                boxLabel: 'Free Shipping',
+                text: 'Free Shipping',
+                dataIndex: 'freeshipping',
+                handler: function () {
+                    var freeShippingChecked = this.checked;
+                    BI.currentStore.clearFilter();
+                    BI.currentStore.filter([
+                        {filterFn: function (item) {
+                                return ((freeShippingChecked == true) ? (item.get('freeshipping') == true) : (item.get('freeshipping') == false));
+                            }
+                        }]);
+
+                }},
+            {
+                xtype: 'checkbox',
+                id:'outofstock',
+                boxLabel: 'Out of Stock',
+                dataIndex: 'quantity',
+                handler: function () {
+                    var outofstockChecked = this.checked;
+                    BI.currentStore.clearFilter();
+                    BI.currentStore.filter([
+                        {filterFn: function (item) {
+                                 return ((outofstockChecked == true) ? (item.get('quantity') == 0) : (item.get('quantity') >= 0));
+                            }
+                        }]);
+
                 }}],
         plugins: [cellEditing],
         dockedItems: [{
@@ -441,10 +562,11 @@ Ext.onReady(function () {
                 displayInfo: true,
                 items: ['->', {xtype: 'tbseparator', idid: 'beforeBatchSeparator'}, {
                         text: 'Add Product',
+                        icon: iconUrl + 'add.png',
                         handler: function () {
                             // adding product
                             var r = Ext.create('Product', {
-                                name: 'New Entity',
+                                name: 'New Product',
                                 descritpion: 'New descritpion',
                                 size: 'small',
                                 price: 0,
@@ -455,16 +577,28 @@ Ext.onReady(function () {
                         }
                     }, {
                         text: 'Save',
+                        icon: iconUrl + 'save.gif',
                         handler: function () {
                             BI.saveRecords();
                         }
                     }, {
                         text: 'Batch Delete',
+                        icon: iconUrl + 'delete.gif',
                         handler: function () {
                             var selectedRecords = administrant.getSelectionModel().getSelection();
                             Ext.each(selectedRecords, function (item) {
                                 administrant.store.remove(item);
                                 showMessage('Message', selectedRecords.length + ' Record(s) deleted successfully');
+                            });
+                        }
+                    },{
+                        text: 'Batch Update',
+                        icon: iconUrl + 'save.gif',
+                        handler: function () {
+                            var selectedRecords = administrant.getSelectionModel().getSelection();
+                            Ext.each(selectedRecords, function (item) {
+                                administrant.store.remove(item);
+                                showMessage('Message', 'Can be used in future to bulk update products or give discounts');
                             });
                         }
                     }]

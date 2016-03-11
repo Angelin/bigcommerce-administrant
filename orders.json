@@ -6,68 +6,68 @@
             "name": "Harvey Spectar",
             "amount": "1000",
             "datetime": "01/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order1.html'>8 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order1.html'>8 items</a>",
             "status": "Awaiting Payment"
         },
         {
             "name": "Jessica Pearson",
             "amount": "5000",
             "datetime": "01/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order2.html'>5 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order2.html'>5 items</a>",
             "status": "Awaiting Shipment"
         },
         {
             "name": "Mike Ross",
             "amount": "750",
             "datetime": "02/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order3.html'>6 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order3.html'>6 items</a>",
             "status": "Awaiting Shipment"
         },
         {
             "name": "Louis",
             "amount": "800",
             "datetime": "02/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order4.html'>4 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order4.html'>4 items</a>",
             "status": "Shipped"
         },{
             "name": "Tyrion Lannister",
             "amount": "550",
             "datetime": "03/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order5.html'>3 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order5.html'>3 items</a>",
             "status": "Shipped"
         },{
             "name": "Sheldon Cooper",
             "amount": "1000",
             "datetime": "03/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order6.html'>7 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order6.html'>7 items</a>",
             "status": "Completed"
         },
         {
             "name": "Watson",
             "amount": "3000",
             "datetime": "04/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order7.html'>3 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order7.html'>3 items</a>",
             "status": "Refunded"
         },
         {
             "name": "Walter White",
             "amount": "4000",
             "datetime": "03/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order8.html'>2 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order8.html'>2 items</a>",
             "status": "Refunded"
         },
         {
             "name": "Jesse Pinkman",
             "amount": "2000",
             "datetime": "05/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order9.html'>6 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order9.html'>6 items</a>",
             "status": "Declined"
         },
         {
             "name": "Hank Schrader",
             "amount": "1000",
             "datetime": "05/03/2016 12:30:00",
-            "details": "<a href='http://localhost/bigcommerce-administrant-master/order10.html'>3 items</a>",
+            "details": "<a target='_blank' href='http://localhost/bigcommerce-administrant-master/order10.html'>3 items</a>",
             "status": "Declined"
         }
     ]
